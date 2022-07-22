@@ -1,0 +1,17 @@
+resource_group_name = "TERRAFORM-TEST"
+resource_group_location = "East US"
+virtual_network_name = "TERRAFORM-VNET"
+virtual_network_address_space = ["10.1.0.0/16","172.100.0.0/16"]
+virtual_network_dns_servers = ["127.0.0.1", "127.0.0.2"]
+subnet_name = "TERRAFORM-VSUBNET"
+subnet_address_prefixes = ["10.1.0.0/24"]
+network_security_group_name = "TERRAFORM-SECURITY"
+ise_username = "adminIse"
+ise_password = "C1sco12345"
+ise_deployment = "single_node" // This can be (single_node, small_deployment, medium_deployment, large_deployment)
+ise_psn_instances = 4
+ise_base_hostname = "ISE-32"
+create_resource_group = true
+create_virtual_network = true
+create_security_group = true
+create_subnet = true
