@@ -1,6 +1,6 @@
 # Azure ISE Deployment Terraform module
 
-Terraform module which creates an ISE Deployment in AWS.
+Terraform module which creates an ISE Deployment in Azure.
 
 ## Usage
 
@@ -43,25 +43,25 @@ Terraform module which creates an ISE Deployment in AWS.
 
 | Name | Type |
 |------|------|
-| [large_deployment](https://registry.terraform.io/modules/fmunozmiranda/ise-deployment/aws/1.0.7/submodules/large_deployment) | internal |
-| [medium_deployment](https://registry.terraform.io/modules/fmunozmiranda/ise-deployment/aws/1.0.7/submodules/medium_deployment) | internal |
-| [small_deployment](https://registry.terraform.io/modules/fmunozmiranda/ise-deployment/aws/1.0.7/submodules/small_deployment) | internal |
-| [single_node](https://registry.terraform.io/modules/fmunozmiranda/ise-deployment/aws/1.0.7/submodules/single_node_deployment) | internal |
+| [large_deployment](https://github.com/fmunozmiranda/terraform-azure-ise-deployment/tree/main/modules/large_deployment) | internal |
+| [medium_deployment](https://github.com/fmunozmiranda/terraform-azure-ise-deployment/tree/main/modules/medium_deployment) | internal |
+| [small_deployment](https://github.com/fmunozmiranda/terraform-azure-ise-deployment/tree/main/modules/small_deployment) | internal |
+| [single_node](https://github.com/fmunozmiranda/terraform-azure-ise-deployment/tree/main/modules/single_node) | internal |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
-| [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | resource |
-| [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | data source |
-| [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | resource |
-| [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | data source |
-| [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | resource |
-| [azurerm_network_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | data source |
-| [azurerm_network_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | resource |
-| [tls_private_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | resource |
-| [local_file](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | resource |
+| [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
+| [azurerm_resource_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/azurerm_virtual_network) | data source |
+| [azurerm_virtual_network](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/azurerm_virtual_network) | resource |
+| [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/azurerm_subnet) | data source |
+| [azurerm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/azurerm_subnet) | resource |
+| [azurerm_network_security_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/azurerm_network_security_group) | data source |
+| [azurerm_network_security_group](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/azurerm_network_security_group) | resource |
+| [tls_private_key](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/tls_private_key) | resource |
+| [local_file](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/local_file) | resource |
 
 ## Inputs
 
