@@ -47,14 +47,19 @@ None.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 |azure_resource_group_name| Resource Group Name | `string` | - | yes|
-|location| Resource Group Location | `string` | - | yes |
+|azure_resource_group_location| Resource Group Location | `string` | - | yes |
 |ssh_key| SSH Key to connect to Nodes | `string` | - | yes |
-|username| ISE Username | `string` | - | yes |
-|password| ISE Password | `string` | - | yes |
-|base_hostname| ISE Base Hostname | `string` | - | yes |
+|ise_username| ISE Username | `string` | - | yes |
+|ise_password| ISE Password | `string` | - | yes |
+|azure_base_hostname| ISE Base Hostname | `string` | - | yes |
 |internal_id| Internal Id | `string` | - | yes |
-|security_group_id| Security Group Id. | `string` | - | yes |
-| ise_psn_instances | ISE PSN Instances | `number` | - | yes |
+|azure_security_group_id| Security Group Id. | `string` | - | yes |
+|ise_psn_instances | ISE PSN Instances | `number` | - | yes |
+|source_image_id| ISE Source Image Id. | `string` | `true` | no |
+|ise_ntp_server| ISE NTP Server | `string` | - | yes |
+|ise_dns_server| ISE DNS Server | `string` | - | yes |
+|ise_domain| ISE Domain | `string` | - | yes |
+|ise_timezone| ISE Timezone | `string` | - | yes |
 
 ## Outputs
 

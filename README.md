@@ -77,6 +77,10 @@ Terraform module which creates an ISE Deployment in Azure.
 |azure_network_security_group_name| Network Security Group Name For ISE | `string` | - | yes |
 |ise_username| ISE Username | `string` | - | yes |
 |ise_password| ISE Password | `string` | - | yes |
+|ise_ntp_server| ISE NTP Server | `string` | - | yes |
+|ise_dns_server| ISE DNS Server | `string` | - | yes |
+|ise_domain| ISE Domain | `string` | - | yes |
+|ise_timezone| ISE Timezone | `string` | - | yes |
 |ise_deployment| ISE Deployment | `string` | - | yes |
 |ise_psn_instances| ISE PSN Instances | `number` | `0` | no |
 |ise_base_hostname| ISE Base Hostname | `string` | - | yes |
@@ -84,6 +88,8 @@ Terraform module which creates an ISE Deployment in Azure.
 |create_virtual_network| Determines to create or not a new Virtual Network. | `string` | `true` | no |
 |create_security_group| Determines to create or not a new Security Group. | `string` | `true` | no |
 |create_subnet| Determines to create or not a new Subnet. | `string` | `true` | no |
+|source_image_id| ISE Source Image Id. | `string` | `true` | no |
+
 
 ## Outputs
 
