@@ -1,15 +1,15 @@
 resource "azurerm_public_ip" "public_ip_pan_mnt" {
   count = 2
-  name                = "${var.base_name}acceptanceTestPublicIpPanMnt${count.index}"
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  name                = "${var.ise_base_hostname}acceptanceTestPublicIpPanMnt${count.index}"
+  resource_group_name = var.azure_resource_group_name
+  location            = var.azure_resource_group_location
   allocation_method   = "Dynamic"
 }
 resource "azurerm_network_interface" "ise-pan-mnt" {
   count = 2
-  name                = "${var.base_name}-nic-pan-mnt-${count.index}"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+  name                = "${var.ise_base_hostname}-nic-pan-mnt-${count.index}"
+  location            = var.azure_resource_group_location
+  resource_group_name = var.azure_resource_group_name
 
   ip_configuration {
     name                          = "testconfiguration${count.index}"
@@ -22,53 +22,55 @@ resource "azurerm_network_interface" "ise-pan-mnt" {
 resource "azurerm_network_interface_security_group_association" "ise" {
   count = 2
   network_interface_id      = azurerm_network_interface.ise-pan-mnt[count.index].id
-  network_security_group_id = var.security_group_id
+  network_security_group_id = var.azure_security_group_id
 }
 
 resource "azurerm_linux_virtual_machine" "ise-pan-mnt" {
   count = 2
-  name                = "${var.base_name}-machine-pan-mnt-${count.index}"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  size                = "Standard_B1ls"
-  admin_username      = var.username
+  name                = "${var.ise_base_hostname}-machine-pan-mnt-${count.index}"
+  resource_group_name = var.azure_resource_group_name
+  location            = var.azure_resource_group_location
+  size                = "Standard_D16s_v5"
+  admin_username      = var.ise_username
   network_interface_ids = [
     azurerm_network_interface.ise-pan-mnt[count.index].id
   ]
 
+  user_data              = base64encode("hostname=${ lower(var.ise_base_hostname) }-server-pan-mnt\nprimarynameserver=${var.ise_dns_server}\ndnsdomain=${var.ise_domain}\nntpserver=${var.ise_ntp_server}\ntimezone=${var.ise_timezone}\nusername=${ var.ise_username }\npassword=${var.ise_password}")
+
   admin_ssh_key {
-    username   = var.username
+    username   = var.ise_username
     public_key = var.ssh_key
   }
 
   os_disk {
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    storage_account_type = "Premium_LRS"
   }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
-    version   = "latest"
-  }
+   # source_image_reference {
+  #   publisher = "Canonical"
+  #   offer     = "UbuntuServer"
+  #   sku       = "16.04-LTS"
+  #   version   = "latest"
+  # }
 
-  # source_image_id = "/subscriptions/80c00b4f-3c6e-4eb2-bf09-8ad725a2e1ac/resourceGroups/ise/providers/Microsoft.Compute/images/ise-3.2.0.364"
+  source_image_id = var.source_image_id
 }
 
 resource "azurerm_public_ip" "public_ip" {
   count = var.ise_psn_instances > 4 ? 4 : var.ise_psn_instances
-  name                = "${var.base_name}acceptanceTestPublicIp${count.index}"
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  name                = "${var.ise_base_hostname}acceptanceTestPublicIp${count.index}"
+  resource_group_name = var.azure_resource_group_name
+  location            = var.azure_resource_group_location
   allocation_method   = "Dynamic"
 }
 
 resource "azurerm_network_interface" "ise" {
   count = var.ise_psn_instances > 4 ? 4 : var.ise_psn_instances
-  name                = "${var.base_name}-nic-machine-${count.index}"
-  location            = var.location
-  resource_group_name = var.resource_group_name
+  name                = "${var.ise_base_hostname}-nic-machine-${count.index}"
+  location            = var.azure_resource_group_location
+  resource_group_name = var.azure_resource_group_name
 
   ip_configuration {
     name                          = "testconfigurationmachine${count.index}"
@@ -81,7 +83,7 @@ resource "azurerm_network_interface" "ise" {
 resource "azurerm_network_interface_security_group_association" "ise-m" {
   count = var.ise_psn_instances > 4 ? 4 : var.ise_psn_instances
   network_interface_id      = azurerm_network_interface.ise[count.index].id
-  network_security_group_id = var.security_group_id
+  network_security_group_id = var.azure_security_group_id
 }
 
 resource "azurerm_linux_virtual_machine" "example" {
@@ -89,31 +91,33 @@ resource "azurerm_linux_virtual_machine" "example" {
     azurerm_linux_virtual_machine.ise-pan-mnt
   ]
   count = var.ise_psn_instances > 4 ? 4 : var.ise_psn_instances
-  name                = "${var.base_name}-machine-${count.index}"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  size                = "Standard_B1ls"
-  admin_username      = var.username
+  name                = "${var.ise_base_hostname}-machine-${count.index}"
+  resource_group_name = var.azure_resource_group_name
+  location            = var.azure_resource_group_location
+  size                = "Standard_D16s_v5"
+  admin_username      = var.ise_username
   network_interface_ids = [
     azurerm_network_interface.ise[count.index].id
   ]
 
+  user_data              = base64encode("hostname=${ lower(var.ise_base_hostname) }-server\nprimarynameserver=${var.ise_dns_server}\ndnsdomain=${var.ise_domain}\nntpserver=${var.ise_ntp_server}\ntimezone=${var.ise_timezone}\nusername=${ var.ise_username }\npassword=${var.ise_password}")
+
   admin_ssh_key {
-    username   = var.username
+    username   = var.ise_username
     public_key = var.ssh_key
   }
 
   os_disk {
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    storage_account_type = "Premium_LRS"
   }
 
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
-    version   = "latest"
-  }
+   # source_image_reference {
+  #   publisher = "Canonical"
+  #   offer     = "UbuntuServer"
+  #   sku       = "16.04-LTS"
+  #   version   = "latest"
+  # }
 
-  # source_image_id = "/subscriptions/80c00b4f-3c6e-4eb2-bf09-8ad725a2e1ac/resourceGroups/ise/providers/Microsoft.Compute/images/ise-3.2.0.364"
+  source_image_id = var.source_image_id
 }

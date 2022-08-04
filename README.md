@@ -67,14 +67,14 @@ Terraform module which creates an ISE Deployment in Azure.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-|resource_group_name| Resource Group Name | `string` | - | yes|
-|resource_group_location| Resource Group Location | `string` | - | yes |
-|virtual_network_name| Virtual Network Name For ISE | `string` | - | yes |
-|virtual_network_address_space| Virtual Network Address Space For ISE| `string` | - | yes |
-|virtual_network_dns_servers| Virtual Network DNS Servers | `string` | - | yes |
-|subnet_name| Virtual Subnet Name For ISE | `string` | - | yes |
-|subnet_address_prefixes| Subnet Address Prefixes For ISE | `string` | - | yes |
-|network_security_group_name| Network Security Group Name For ISE | `string` | - | yes |
+|azure_resource_group_name| Resource Group Name | `string` | - | yes|
+|azure_resource_group_location| Resource Group Location | `string` | - | yes |
+|azure_virtual_network_name| Virtual Network Name For ISE | `string` | - | yes |
+|azure_virtual_network_address_space| Virtual Network Address Space For ISE| `string` | - | yes |
+|azure_virtual_network_dns_servers| Virtual Network DNS Servers | `string` | - | yes |
+|azure_subnet_name| Virtual Subnet Name For ISE | `string` | - | yes |
+|azure_subnet_address_prefixes| Subnet Address Prefixes For ISE | `string` | - | yes |
+|azure_network_security_group_name| Network Security Group Name For ISE | `string` | - | yes |
 |ise_username| ISE Username | `string` | - | yes |
 |ise_password| ISE Password | `string` | - | yes |
 |ise_deployment| ISE Deployment | `string` | - | yes |

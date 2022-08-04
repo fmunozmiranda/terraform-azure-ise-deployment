@@ -1,9 +1,9 @@
-variable "location" {
+variable "azure_resource_group_location" {
   type = string
   description = "Resource Group Location"
 }
 
-variable "resource_group_name" {
+variable "azure_resource_group_name" {
   type = string
   description = "Resource Group Name"
 }
@@ -18,26 +18,50 @@ variable "internal_id" {
   description = "Internal Id"
 }
 
-variable "security_group_id" {
+variable "azure_security_group_id" {
   type= string
   description = "Security Group Id"
 }
 
-variable "username" {
+variable "ise_username" {
   type= string
   description="ISE Username"
 }
 
-variable "password" {
+variable "ise_password" {
   type= string
   description = "ISE Password"
 }
 
-variable "base_name" {
+variable "ise_base_hostname" {
   type = string
   description = "ISE Password"
 }
 
+variable "ise_ntp_server" {
+  description = "ISE Server NTP"
+  type        = string
+}
+
+variable "ise_dns_server" {
+  description = "ISE Server DNS"
+  type        = string
+}
+
+variable "ise_domain" {
+  description = "ISE Server Domain"
+  type        = string
+}
+
+variable "ise_timezone" {
+  description = "ISE Server Timezone"
+  type        = string
+}
+
+variable "source_image_id" {
+  description = "ISE Source Image Id"
+  type        = string
+}
 variable "ise_psn_instances" {
   type = number
   description = "ISE PSN Instances"

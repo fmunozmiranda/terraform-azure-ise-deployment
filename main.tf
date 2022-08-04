@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
       version = "3.11.0"
     }
   }
@@ -30,25 +30,25 @@ output "ciscoise_aci_bindings_example" {
 
 //Create resource group
 resource "azurerm_resource_group" "ise" {
-  count = var.create_resource_group ? 1 : 0
-  name     = var.resource_group_name
-  location = var.resource_group_location
+  count    = var.create_resource_group ? 1 : 0
+  name     = var.azure_resource_group_name
+  location = var.azure_resource_group_location
 }
 
 //Look for resource group 
 data "azurerm_resource_group" "example" {
   count = var.create_resource_group ? 0 : 1
-  name = var.resource_group_name
+  name  = var.azure_resource_group_name
 }
 
 //Create virtual network
 resource "azurerm_virtual_network" "ise" {
-  count = var.create_virtual_network ? 1 : 0
-  name                = var.virtual_network_name
+  count               = var.create_virtual_network ? 1 : 0
+  name                = var.azure_virtual_network_name
   location            = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
-  resource_group_name = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
-  address_space       = var.virtual_network_address_space
-  dns_servers         = var.virtual_network_dns_servers
+  resource_group_name = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
+  address_space       = var.azure_virtual_network_address_space
+  dns_servers         = var.azure_virtual_network_dns_servers
 
   /*subnet {
     name           = "subnet1"
@@ -68,37 +68,37 @@ resource "azurerm_virtual_network" "ise" {
 
 //Look for virtual network
 data "azurerm_virtual_network" "example" {
-  count = var.create_virtual_network ? 0 : 1
-  name                = var.virtual_network_name
-  resource_group_name = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
+  count               = var.create_virtual_network ? 0 : 1
+  name                = var.azure_virtual_network_name
+  resource_group_name = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
 }
 
 
 // Create Subnet
 resource "azurerm_subnet" "internal" {
-  count = var.create_subnet ? 1 : 0 
-  name                 = var.subnet_name
-  resource_group_name  = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
+  count                = var.create_subnet ? 1 : 0
+  name                 = var.azure_subnet_name
+  resource_group_name  = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
   virtual_network_name = var.create_virtual_network ? azurerm_virtual_network.ise[0].name : data.azurerm_virtual_network.example[0].name
-  address_prefixes     = var.subnet_address_prefixes
+  address_prefixes     = var.azure_subnet_address_prefixes
 }
 
 
 // Look for Subnet
 data "azurerm_subnet" "example" {
-  count = var.create_subnet ? 0 : 1
-  name                 = var.subnet_name
+  count                = var.create_subnet ? 0 : 1
+  name                 = var.azure_subnet_name
   virtual_network_name = var.create_virtual_network ? azurerm_virtual_network.ise[0].name : data.azurerm_virtual_network.example[0].name
-  resource_group_name  = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
+  resource_group_name  = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
 }
 
 
 // Create security group
 resource "azurerm_network_security_group" "ise" {
-  count = var.create_security_group ? 1 : 0
-  name                = var.network_security_group_name
+  count               = var.create_security_group ? 1 : 0
+  name                = var.azure_network_security_group_name
   location            = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
-  resource_group_name = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
+  resource_group_name = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
   security_rule {
     name                       = "AllowSSH"
     priority                   = 101
@@ -107,6 +107,17 @@ resource "azurerm_network_security_group" "ise" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "AllowHTTPSAccess"
+    priority                   = 104
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -137,9 +148,9 @@ resource "azurerm_network_security_group" "ise" {
 
 // Look for security group
 data "azurerm_network_security_group" "example" {
-  count = var.create_security_group ? 0 : 1
-  name                = var.network_security_group_name
-  resource_group_name = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
+  count               = var.create_security_group ? 0 : 1
+  name                = var.azure_network_security_group_name
+  resource_group_name = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
 }
 
 
@@ -149,65 +160,85 @@ resource "tls_private_key" "ise_ssh" {
   rsa_bits  = 4096
 }
 resource "local_file" "linuxkey" {
-  filename="azure_key.pem"  
-  content=tls_private_key.ise_ssh.private_key_pem 
+  filename = "azure_key.pem"
+  content  = tls_private_key.ise_ssh.private_key_pem
 }
 
 # resource "azurerm_ssh_public_key" "example" {
 #   name                = "ise_azure_key"
-#   resource_group_name = var.resource_group_name
-#   location            = var.resource_group_location
+#   resource_group_name = var.azure_resource_group_name
+#   location            = var.azure_resource_group_location
 #   public_key          = file("~/.ssh/id_rsa.pub")
 # }
 
 
 module "single" {
-  count = var.ise_deployment == "single_node" ? 1 : 0
-  source = "./modules/single_node"
-  location              = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
-  resource_group_name   = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
-  ssh_key= tls_private_key.ise_ssh.public_key_openssh
-  internal_id = var.create_subnet ? azurerm_subnet.internal[0].id : data.azurerm_subnet.example[0].id
-  security_group_id = var.create_security_group ? azurerm_network_security_group.ise[0].id : data.azurerm_network_security_group.example[0].id
-  username= var.ise_username
-  password= var.ise_password
-  base_name= var.ise_base_hostname
+  count                         = var.ise_deployment == "single_node" ? 1 : 0
+  source                        = "./modules/single_node"
+  azure_resource_group_location = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
+  azure_resource_group_name     = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
+  ssh_key                       = tls_private_key.ise_ssh.public_key_openssh
+  internal_id                   = var.create_subnet ? azurerm_subnet.internal[0].id : data.azurerm_subnet.example[0].id
+  azure_security_group_id       = var.create_security_group ? azurerm_network_security_group.ise[0].id : data.azurerm_network_security_group.example[0].id
+  ise_username                  = var.ise_username
+  ise_password                  = var.ise_password
+  ise_base_hostname             = var.ise_base_hostname
+  ise_dns_server                = var.ise_dns_server
+  ise_domain                    = var.ise_domain
+  ise_ntp_server                = var.ise_ntp_server
+  ise_timezone                  = var.ise_timezone
+  source_image_id               = var.source_image_id
 }
 module "small" {
-  count = var.ise_deployment == "small_deployment" ? 1 : 0
-  source = "./modules/small_deployment"
-  location              = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
-  resource_group_name   = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
-  ssh_key= tls_private_key.ise_ssh.public_key_openssh
-  internal_id = var.create_subnet ? azurerm_subnet.internal[0].id : data.azurerm_subnet.example[0].id
-  security_group_id = var.create_security_group ? azurerm_network_security_group.ise[0].id : data.azurerm_network_security_group.example[0].id
-  username= var.ise_username
-  password= var.ise_password
-  base_name= var.ise_base_hostname
+  count                         = var.ise_deployment == "small_deployment" ? 1 : 0
+  source                        = "./modules/small_deployment"
+  azure_resource_group_location = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
+  azure_resource_group_name     = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
+  ssh_key                       = tls_private_key.ise_ssh.public_key_openssh
+  internal_id                   = var.create_subnet ? azurerm_subnet.internal[0].id : data.azurerm_subnet.example[0].id
+  azure_security_group_id       = var.create_security_group ? azurerm_network_security_group.ise[0].id : data.azurerm_network_security_group.example[0].id
+  ise_username                  = var.ise_username
+  ise_password                  = var.ise_password
+  ise_base_hostname             = var.ise_base_hostname
+  ise_dns_server                = var.ise_dns_server
+  ise_domain                    = var.ise_domain
+  ise_ntp_server                = var.ise_ntp_server
+  ise_timezone                  = var.ise_timezone
+  source_image_id               = var.source_image_id
 }
 module "medium" {
-  count = var.ise_deployment == "medium_deployment" ? 1 : 0
-  source = "./modules/medium_deployment"
-  location              = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
-  resource_group_name   = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
-  ssh_key= tls_private_key.ise_ssh.public_key_openssh
-  ise_psn_instances = var.ise_psn_instances
-  internal_id = var.create_subnet ? azurerm_subnet.internal[0].id : data.azurerm_subnet.example[0].id
-  security_group_id = var.create_security_group ? azurerm_network_security_group.ise[0].id : data.azurerm_network_security_group.example[0].id
-  username= var.ise_username
-  password= var.ise_password
-  base_name= var.ise_base_hostname
+  count                         = var.ise_deployment == "medium_deployment" ? 1 : 0
+  source                        = "./modules/medium_deployment"
+  azure_resource_group_location = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
+  azure_resource_group_name     = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
+  ssh_key                       = tls_private_key.ise_ssh.public_key_openssh
+  ise_psn_instances             = var.ise_psn_instances
+  internal_id                   = var.create_subnet ? azurerm_subnet.internal[0].id : data.azurerm_subnet.example[0].id
+  azure_security_group_id       = var.create_security_group ? azurerm_network_security_group.ise[0].id : data.azurerm_network_security_group.example[0].id
+  ise_username                  = var.ise_username
+  ise_password                  = var.ise_password
+  ise_base_hostname             = var.ise_base_hostname
+  ise_dns_server                = var.ise_dns_server
+  ise_domain                    = var.ise_domain
+  ise_ntp_server                = var.ise_ntp_server
+  ise_timezone                  = var.ise_timezone
+  source_image_id               = var.source_image_id
 }
 module "large" {
-  count = var.ise_deployment == "large_deployment" ? 1 : 0
-  source = "./modules/large_deployment"
-  location              = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
-  resource_group_name   = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.resource_group_name
-  ssh_key= tls_private_key.ise_ssh.public_key_openssh
-  ise_psn_instances = var.ise_psn_instances
-  internal_id = var.create_subnet ? azurerm_subnet.internal[0].id : data.azurerm_subnet.example[0].id
-  security_group_id = var.create_security_group ? azurerm_network_security_group.ise[0].id : data.azurerm_network_security_group.example[0].id
-  username= var.ise_username
-  password= var.ise_password
-  base_name= var.ise_base_hostname
+  count                         = var.ise_deployment == "large_deployment" ? 1 : 0
+  source                        = "./modules/large_deployment"
+  azure_resource_group_location = var.create_resource_group ? azurerm_resource_group.ise[0].location : data.azurerm_resource_group.example[0].location
+  azure_resource_group_name     = var.create_resource_group ? azurerm_resource_group.ise[0].name : var.azure_resource_group_name
+  ssh_key                       = tls_private_key.ise_ssh.public_key_openssh
+  ise_psn_instances             = var.ise_psn_instances
+  internal_id                   = var.create_subnet ? azurerm_subnet.internal[0].id : data.azurerm_subnet.example[0].id
+  azure_security_group_id       = var.create_security_group ? azurerm_network_security_group.ise[0].id : data.azurerm_network_security_group.example[0].id
+  ise_username                  = var.ise_username
+  ise_password                  = var.ise_password
+  ise_base_hostname             = var.ise_base_hostname
+  ise_dns_server                = var.ise_dns_server
+  ise_domain                    = var.ise_domain
+  ise_ntp_server                = var.ise_ntp_server
+  ise_timezone                  = var.ise_timezone
+  source_image_id               = var.source_image_id
 }

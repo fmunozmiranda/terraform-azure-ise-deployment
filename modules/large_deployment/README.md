@@ -46,7 +46,7 @@ None.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-|resource_group_name| Resource Group Name | `string` | - | yes|
+|azure_resource_group_name| Resource Group Name | `string` | - | yes|
 |location| Resource Group Location | `string` | - | yes |
 |ssh_key| SSH Key to connect to Nodes | `string` | - | yes |
 |username| ISE Username | `string` | - | yes |
