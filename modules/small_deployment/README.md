@@ -8,11 +8,15 @@ Terraform module which creates an ISE Small Deployment in Azure.
 
 
 
-<!-- module "ise-deployment" {
-  source  = "fmunozmiranda/ise-deployment/aws"
-  version = "1.0.8"
-  # insert the 17 required variables here
-} -->
+
+
+module "ise-deployment_small_deployment" {
+  source  = "fmunozmiranda/ise-deployment/azure//modules/small_deployment"
+  version = "1.0.0"
+  # insert the 13 required variables here
+}
+
+
 
 
 ```

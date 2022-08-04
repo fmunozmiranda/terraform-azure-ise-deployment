@@ -8,11 +8,15 @@ Terraform module which creates an ISE Large Deployment in Azure.
 
 
 
-<!-- module "ise-deployment" {
-  source  = "fmunozmiranda/ise-deployment/aws"
-  version = "1.0.8"
-  # insert the 17 required variables here
-} -->
+
+
+module "ise-deployment_large_deployment" {
+  source  = "fmunozmiranda/ise-deployment/azure//modules/large_deployment"
+  version = "1.0.0"
+  # insert the 14 required variables here
+}
+
+
 
 
 ```

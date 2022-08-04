@@ -8,11 +8,11 @@ Terraform module which creates an ISE Deployment in Azure.
 
 
 
-<!-- module "ise-deployment" {
-  source  = "fmunozmiranda/ise-deployment/aws"
-  version = "1.0.8"
+module "ise-deployment" {
+  source  = "fmunozmiranda/ise-deployment/azure"
+  version = "1.0.0"
   # insert the 17 required variables here
-} -->
+}
 
 
 

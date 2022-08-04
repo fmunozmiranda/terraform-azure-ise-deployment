@@ -1,0 +1,26 @@
+module "ise-deployment" {
+    source  = "fmunozmiranda/ise-deployment/azure"
+    version = "1.0.0"
+    azure_resource_group_name           = var.azure_resource_group_name           
+    azure_resource_group_location       = var.azure_resource_group_location       
+    azure_virtual_network_name          = var.azure_virtual_network_name          
+    azure_virtual_network_address_space = var.azure_virtual_network_address_space 
+    azure_virtual_network_dns_servers   = var.azure_virtual_network_dns_servers   
+    azure_subnet_name                   = var.azure_subnet_name                   
+    azure_subnet_address_prefixes       = var.azure_subnet_address_prefixes       
+    azure_network_security_group_name   = var.azure_network_security_group_name   
+    ise_username                        = var.ise_username                        
+    ise_password                        = var.ise_password                        
+    ise_deployment                      = var.ise_deployment                      
+    ise_psn_instances                   = var.ise_psn_instances                   
+    ise_base_hostname                   = var.ise_base_hostname                   
+    ise_dns_server                      = var.ise_dns_server                      
+    ise_domain                          = var.ise_domain                          
+    ise_ntp_server                      = var.ise_ntp_server                      
+    ise_timezone                        = var.ise_timezone                        
+    source_image_id                     = var.source_image_id                     
+    create_resource_group               = var.create_resource_group               
+    create_virtual_network              = var.create_virtual_network              
+    create_security_group               = var.create_security_group               
+    create_subnet                       = var.create_subnet                       
+}
