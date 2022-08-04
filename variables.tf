@@ -14,7 +14,7 @@ variable "azure_virtual_network_name" {
 }
 
 variable "azure_virtual_network_address_space" {
-  type        = list(string) //["10.1.0.0/16","172.100.0.0/16"]
+  type        = list(string) //["10.1.0.1/16","172.100.0.0/16"]
   description = "Azure Virtual Network Adress Space For ISE."
 }
 
