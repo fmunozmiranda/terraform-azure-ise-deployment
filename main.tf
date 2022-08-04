@@ -162,6 +162,7 @@ resource "tls_private_key" "ise_ssh" {
 resource "local_file" "linuxkey" {
   filename = "azure_key.pem"
   content  = tls_private_key.ise_ssh.private_key_pem
+  file_permission = "0600"
 }
 
 # resource "azurerm_ssh_public_key" "example" {

@@ -11,7 +11,28 @@ Terraform module which creates an ISE Deployment in Azure.
 module "ise-deployment" {
   source  = "fmunozmiranda/ise-deployment/azure"
   version = "1.0.1"
-  # insert the 17 required variables here
+  azure_resource_group_name           = "TERRAFORM-TEST-3"
+  azure_resource_group_location       = "South Central US"
+  azure_virtual_network_name          = "TERRAFORM-VNET"
+  azure_virtual_network_address_space = ["10.1.0.1/16", "172.100.0.0/16"]
+  azure_virtual_network_dns_servers   = ["127.0.0.1", "127.0.0.2"]
+  azure_subnet_name                   = "Subnet Name"
+  azure_subnet_address_prefixes       = ["10.1.0.1/24"]
+  azure_network_security_group_name   = "Security Group Name"
+  ise_username                        = "Ise Username"
+  ise_password                        = "*********"
+  ise_deployment                      = "large_deployment" // This can be (single_node, small_deployment, medium_deployment, large_deployment)
+  ise_psn_instances                   = 4
+  ise_base_hostname                   = "Base_Name_for_nodes"
+  ise_dns_server                      = "208.67.220.220"
+  ise_domain                          = "sstcloud.com"
+  ise_ntp_server                      = "10.10.0.1"
+  ise_timezone                        = "America/Costa_Rica"
+  source_image_id                     = "ImageID"
+  create_resource_group               = true
+  create_virtual_network              = true
+  create_security_group               = true
+  create_subnet                       = true
 }
 
 
@@ -30,14 +51,14 @@ module "ise-deployment" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_azure"></a> [azure](#requirement\_azure) | >= 3.11.0 |
+| terraform | >= 0.13.1 |
+| azure | >= 3.11.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azure"></a> [azure](#requirement\_azure) | >= 3.11.0 |
+| azure | >= 3.11.0 |
 
 ## Modules
 
@@ -90,6 +111,15 @@ module "ise-deployment" {
 |create_subnet| Determines to create or not a new Subnet. | `string` | `true` | no |
 |source_image_id| ISE Source Image Id. | `string` | `true` | no |
 
+## Assumptions
+- If you don't put `ise_psn_instances` inside the parameters when running a medium or large deployment, the psn nodes are skipped.
+- If you're not going to create subnet, you can include `azure_subnet_address_prefixes` parameter as empty string.
+- The created SSH key is stored in the folder where the `main.tf` is executed.
+- This module does not consider possible errors due to security rules in ISE that may prevent the execution of the deployment.
+- If `create_resource_group` is not included, the default is create it.
+- If `create_virtual_network` is not included, the default is create it.
+- If `create_security_group` is not included, the default is create it.
+- If `create_subnet` is not included, the default is create it.
 
 ## Outputs
 

@@ -25,14 +25,14 @@ module "ise-deployment_large_deployment" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_azure"></a> [azure](#requirement\_azure) | >= 3.11.0 |
+| terraform | >= 0.13.1 |
+| azure | >= 3.11.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azure"></a> [azure](#requirement\_azure) | >= 3.11.0 |
+| azure | >= 3.11.0 |
 
 ## Modules
 None.
