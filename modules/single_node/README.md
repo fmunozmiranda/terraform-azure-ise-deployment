@@ -12,7 +12,7 @@ Terraform module which creates an ISE Single Node Deployment in Azure.
 
 module "ise-deployment_small_deployment" {
   source  = "fmunozmiranda/ise-deployment/azure//modules/single_node_deployment"
-  version = "1.0.1"
+  version = "1.0.2"
   # insert the 13 required variables here
 }
 

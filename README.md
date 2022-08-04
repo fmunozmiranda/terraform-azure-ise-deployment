@@ -10,14 +10,14 @@ Terraform module which creates an ISE Deployment in Azure.
 
 module "ise-deployment" {
   source  = "fmunozmiranda/ise-deployment/azure"
-  version = "1.0.1"
+  version = "1.0.2"
   azure_resource_group_name           = "TERRAFORM-TEST-3"
   azure_resource_group_location       = "South Central US"
   azure_virtual_network_name          = "TERRAFORM-VNET"
-  azure_virtual_network_address_space = ["10.1.0.1/16", "172.100.0.0/16"]
+  azure_virtual_network_address_space = ["10.1.0.2/16", "172.100.0.0/16"]
   azure_virtual_network_dns_servers   = ["127.0.0.1", "127.0.0.2"]
   azure_subnet_name                   = "Subnet Name"
-  azure_subnet_address_prefixes       = ["10.1.0.1/24"]
+  azure_subnet_address_prefixes       = ["10.1.0.2/24"]
   azure_network_security_group_name   = "Security Group Name"
   ise_username                        = "Ise Username"
   ise_password                        = "*********"

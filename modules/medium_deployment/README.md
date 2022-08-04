@@ -12,7 +12,7 @@ Terraform module which creates an ISE Medium Deployment in Azure.
 
 module "ise-deployment_large_deployment" {
   source  = "fmunozmiranda/ise-deployment/azure//modules/medium_deployment"
-  version = "1.0.1"
+  version = "1.0.2"
   # insert the 14 required variables here
 }
 

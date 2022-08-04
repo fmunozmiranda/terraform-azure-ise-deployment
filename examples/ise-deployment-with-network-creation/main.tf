@@ -1,6 +1,6 @@
 module "ise-deployment" {
     source  = "fmunozmiranda/ise-deployment/azure"
-    version = "1.0.1"
+    version = "1.0.2"
     azure_resource_group_name           = var.azure_resource_group_name           
     azure_resource_group_location       = var.azure_resource_group_location       
     azure_virtual_network_name          = var.azure_virtual_network_name          
