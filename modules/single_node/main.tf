@@ -23,7 +23,7 @@ resource "azurerm_network_interface_security_group_association" "ise" {
   network_security_group_id = var.azure_security_group_id
 }
 resource "azurerm_storage_account" "mystorageaccount" {
-    name                        = "storageaccounttftest"
+    name                        = "${lower(replace(var.ise_base_hostname, "/[-_]/",""))}saccounttftest"
     resource_group_name = var.azure_resource_group_name
     location                    = var.azure_resource_group_location
     account_tier                = "Standard"

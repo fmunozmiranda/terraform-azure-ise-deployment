@@ -27,6 +27,19 @@ resource "azurerm_network_interface_security_group_association" "ise" {
   network_security_group_id = var.azure_security_group_id
 }
 
+resource "azurerm_storage_account" "mystorageaccount" {
+    count = 2
+    name                        = "${lower(replace(var.ise_base_hostname, "/[-_]/",""))}saccounttftest${count.index}"
+    resource_group_name = var.azure_resource_group_name
+    location                    = var.azure_resource_group_location
+    account_tier                = "Standard"
+    account_replication_type    = "LRS"
+
+    tags = {
+        environment = "ISE Storage Account-${count.index}"
+    }
+}
+
 resource "azurerm_linux_virtual_machine" "example" {
   count = 2
   name                = "${var.ise_base_hostname}-machine-${count.index}"
@@ -50,6 +63,10 @@ resource "azurerm_linux_virtual_machine" "example" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Premium_LRS"
+  }
+
+  boot_diagnostics {
+    storage_account_uri = azurerm_storage_account.mystorageaccount[count.index].primary_blob_endpoint
   }
 
    # source_image_reference {

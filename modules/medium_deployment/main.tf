@@ -25,6 +25,19 @@ resource "azurerm_network_interface_security_group_association" "ise" {
   network_security_group_id = var.azure_security_group_id
 }
 
+resource "azurerm_storage_account" "mystorageaccountpanmnt" {
+    count = 2
+    name                        = "${lower(replace(var.ise_base_hostname, "/[-_]/",""))}saccountpm${count.index}"
+    resource_group_name = var.azure_resource_group_name
+    location                    = var.azure_resource_group_location
+    account_tier                = "Standard"
+    account_replication_type    = "LRS"
+
+    tags = {
+        environment = "ISE Storage Account-PAN-MNT-${count.index}"
+    }
+}
+
 resource "azurerm_linux_virtual_machine" "ise-pan-mnt" {
   count = 2
   name                = "${var.ise_base_hostname}-machine-pan-mnt-${count.index}"
@@ -48,6 +61,9 @@ resource "azurerm_linux_virtual_machine" "ise-pan-mnt" {
     storage_account_type = "Premium_LRS"
   }
 
+  boot_diagnostics {
+    storage_account_uri = azurerm_storage_account.mystorageaccountpanmnt[count.index].primary_blob_endpoint
+  }
    # source_image_reference {
   #   publisher = "Canonical"
   #   offer     = "UbuntuServer"
@@ -86,6 +102,19 @@ resource "azurerm_network_interface_security_group_association" "ise-m" {
   network_security_group_id = var.azure_security_group_id
 }
 
+resource "azurerm_storage_account" "mystorageaccount" {
+    count = var.ise_psn_instances > 4 ? 4 : var.ise_psn_instances
+    name                        = "${lower(replace(var.ise_base_hostname, "/[-_]/",""))}saccount${count.index}"
+    resource_group_name = var.azure_resource_group_name
+    location                    = var.azure_resource_group_location
+    account_tier                = "Standard"
+    account_replication_type    = "LRS"
+
+    tags = {
+        environment = "ISE Storage Account-${count.index}"
+    }
+}
+
 resource "azurerm_linux_virtual_machine" "example" {
   depends_on = [
     azurerm_linux_virtual_machine.ise-pan-mnt
@@ -101,6 +130,10 @@ resource "azurerm_linux_virtual_machine" "example" {
   ]
 
   user_data              = base64encode("hostname=${ lower(var.ise_base_hostname) }-server\nprimarynameserver=${var.ise_dns_server}\ndnsdomain=${var.ise_domain}\nntpserver=${var.ise_ntp_server}\ntimezone=${var.ise_timezone}\nusername=${ var.ise_username }\npassword=${var.ise_password}")
+
+  boot_diagnostics {
+    storage_account_uri = azurerm_storage_account.mystorageaccount[count.index].primary_blob_endpoint
+  }
 
   admin_ssh_key {
     username   = var.ise_username
